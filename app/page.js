@@ -21,15 +21,9 @@ export default async function HomePage() {
       <SectionReveal>
         <CategoryBar categories={categoryFilters} />
       </SectionReveal>
-      <SectionReveal>
-        <EventGrid events={eventGrid} />
-      </SectionReveal>
-      <SectionReveal>
-        <Selects items={selects} />
-      </SectionReveal>
-      <SectionReveal>
-        <InterviewSection interviews={interviews} />
-      </SectionReveal>
+      <EventGrid events={eventGrid} />
+      <Selects items={selects} />
+      <InterviewSection interviews={interviews} />
       <Footer />
     </>
   );

@@ -6,19 +6,13 @@ import { motion } from "framer-motion";
 
 export default function Selects({ items }) {
   return (
-    <section className="mx-auto mb-20 max-w-[1400px] px-4 sm:mb-24 sm:px-6">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-        className="mb-12 flex items-end justify-between"
-      >
+    <section className="mx-auto mb-12 max-w-[1400px] px-4 sm:mb-24 sm:px-6">
+      <div className="mb-12 flex items-end justify-between">
         <div>
           <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.3em] text-iris-glow">
             Curated Collections
           </p>
-          <h2 className="font-heading text-4xl font-black uppercase tracking-tighter text-black dark:text-white sm:text-6xl leading-[0.9]">
+          <h2 className="font-heading text-3xl font-black uppercase tracking-tight text-black dark:text-white sm:text-6xl leading-[0.9]">
             The C1rcle <span className="text-transparent bg-clip-text bg-gradient-to-r from-iris via-black dark:via-white to-gold">Selects</span>
           </h2>
         </div>
@@ -31,21 +25,11 @@ export default function Selects({ items }) {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
           </svg>
         </Link>
-      </motion.div>
+      </div>
 
       <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
         {items.map((item, index) => (
-          <motion.div
-            key={item.title}
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{
-              duration: 0.6,
-              delay: index * 0.15,
-              ease: [0.16, 1, 0.3, 1]
-            }}
-          >
+          <div key={item.title}>
             <Link
               href={item.href}
               className="group relative block aspect-[4/5] overflow-hidden rounded-[40px] gradient-border bg-surface btn-lift"
@@ -77,7 +61,7 @@ export default function Selects({ items }) {
               {/* Content */}
               <div className="absolute inset-0 flex flex-col justify-end p-8">
                 <div className="transform transition-all duration-500 group-hover:-translate-y-3">
-                  <h3 className="mb-3 font-heading text-3xl font-black uppercase leading-none text-white sm:text-4xl tracking-tight drop-shadow-2xl">
+                  <h3 className="mb-3 font-heading text-2xl md:text-3xl font-black uppercase leading-none text-white sm:text-4xl tracking-tight drop-shadow-2xl">
                     {item.title}
                   </h3>
                   <p className="mb-6 text-sm font-medium text-white/80 line-clamp-2 drop-shadow-md">
@@ -98,7 +82,7 @@ export default function Selects({ items }) {
                 </div>
               </div>
             </Link>
-          </motion.div>
+          </div>
         ))}
       </div>
     </section>

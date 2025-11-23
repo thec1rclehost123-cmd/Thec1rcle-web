@@ -12,7 +12,7 @@ export default function HeroCarousel({ cards = [] }) {
   const sets = [1, 2, 3, 4];
 
   return (
-    <section className="relative w-full py-20 overflow-hidden bg-white dark:bg-[#0A0A0A]">
+    <section className="relative w-full py-12 md:py-20 overflow-hidden bg-white dark:bg-[#0A0A0A]">
       <div className="mb-12 px-6 md:px-12 max-w-[1600px] mx-auto">
         <div className="flex items-center gap-4 mb-4">
           <div className="h-1 w-16 bg-gradient-to-r from-[#F44A22] to-[#FF6B4A] rounded-full" />
@@ -20,7 +20,7 @@ export default function HeroCarousel({ cards = [] }) {
             Trending Now
           </p>
         </div>
-        <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-black uppercase tracking-tight text-black dark:text-white">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-heading font-black uppercase tracking-tight text-black dark:text-white">
           Featured{" "}
           <span className="inline-block bg-gradient-to-r from-[#F44A22] to-[#FF6B4A] bg-clip-text text-transparent">
             Drops
@@ -49,7 +49,7 @@ export default function HeroCarousel({ cards = [] }) {
                 <Link
                   key={`${setNum}-${card.id || index}`}
                   href={card.href}
-                  className="group relative flex-none w-[300px] md:w-[400px] aspect-[3/4]"
+                  className="group relative flex-none w-[260px] md:w-[400px] aspect-[3/4]"
                 >
                   <div className="h-full w-full overflow-hidden rounded-[40px] bg-black/5 dark:bg-[#161616] border border-black/10 dark:border-white/10 relative transition-all duration-500 group-hover:scale-[1.03] group-hover:shadow-[0_20px_60px_rgba(0,0,0,0.3)] dark:group-hover:shadow-[0_20px_60px_rgba(244,74,34,0.2)]">
                     {/* Image with Zoom Effect */}

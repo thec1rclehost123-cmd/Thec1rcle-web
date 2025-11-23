@@ -16,7 +16,7 @@ export default function Footer() {
       <div className="mx-auto max-w-[1400px] px-6">
         <div className="mb-20 flex flex-col items-center justify-center gap-8 text-center">
           <div className="h-px w-24 bg-gradient-to-r from-transparent via-black/20 dark:via-white/20 to-transparent" />
-          <h2 className="font-heading text-4xl font-bold uppercase tracking-tight text-black dark:text-white sm:text-6xl md:text-8xl opacity-20">
+          <h2 className="font-heading text-3xl font-bold uppercase tracking-tight text-black dark:text-white sm:text-6xl md:text-8xl opacity-20">
             The C1rcle
           </h2>
           <div className="h-px w-24 bg-gradient-to-r from-transparent via-black/20 dark:via-white/20 to-transparent" />

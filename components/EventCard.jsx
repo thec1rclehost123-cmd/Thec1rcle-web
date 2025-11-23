@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 
-export default function EventCard({ event, index = 0, height = "h-[420px]" }) {
+export default function EventCard({ event, index = 0, height = "h-[340px] md:h-[420px]" }) {
   const price = event.price || "Free";
   const isFree = price === "Free" || price === 0;
   const isDefaultImage = event.image?.includes("holi-edit.svg");
@@ -72,7 +72,7 @@ export default function EventCard({ event, index = 0, height = "h-[420px]" }) {
                 <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-iris-glow drop-shadow-md">
                   {event.date} • {event.time}
                 </p>
-                <h3 className="mb-2 font-heading text-2xl font-bold leading-tight text-white drop-shadow-lg line-clamp-2">
+                <h3 className="mb-2 font-heading text-xl md:text-2xl font-bold leading-tight text-white drop-shadow-lg line-clamp-2">
                   {event.title}
                 </h3>
                 <p className="text-sm font-medium text-white/70 drop-shadow-md line-clamp-1">

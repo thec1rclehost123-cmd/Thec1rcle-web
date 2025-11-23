@@ -10,7 +10,7 @@ export default function PageWrapper({ children }) {
     return (
         <main
             className={`
-        ${isHost ? "p-0" : "px-4 pt-28 pb-24 sm:px-8 sm:pt-40 sm:pb-32"}
+        ${isHost ? "p-0" : "px-4 pt-24 pb-20 sm:px-8 sm:pt-40 sm:pb-32"}
       `}
         >
             <RouteTransition>{children}</RouteTransition>

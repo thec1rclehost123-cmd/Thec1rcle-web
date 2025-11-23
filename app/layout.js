@@ -6,6 +6,7 @@ import PageWrapper from "../components/PageWrapper";
 import AppProviders from "../components/providers/AppProviders";
 import ScrollProgressBar from "../components/ScrollProgressBar";
 import PageLoadingAnimation from "../components/PageLoadingAnimation";
+import SmoothScroll from "../components/SmoothScroll";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -71,6 +72,7 @@ export default function RootLayout({ children }) {
             <Navbar />
             <PageWrapper>{children}</PageWrapper>
             <MobileBottomNav />
+            <SmoothScroll />
           </div>
         </AppProviders>
       </body>

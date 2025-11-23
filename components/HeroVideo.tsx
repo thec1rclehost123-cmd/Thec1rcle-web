@@ -59,7 +59,7 @@ export default function HeroVideo({ src }) {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1.2, delay: 0.4 }}
-              className="text-7xl sm:text-8xl md:text-9xl lg:text-[14rem] xl:text-[16rem] font-heading font-black tracking-tighter leading-none"
+              className="text-5xl sm:text-7xl md:text-9xl lg:text-[12rem] xl:text-[14rem] font-heading font-black tracking-tighter leading-none"
               style={{
                 background: 'linear-gradient(135deg, #e5e7eb 0%, #d1d5db 50%, #e5e7eb 100%)',
                 backgroundSize: '200% auto',
@@ -89,7 +89,7 @@ export default function HeroVideo({ src }) {
             transition={{ duration: 1, delay: 1 }}
             className="backdrop-blur-xl bg-white/5 border border-white/20 rounded-full px-10 py-5 inline-block shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
           >
-            <p className="text-lg md:text-2xl text-white font-bold tracking-[0.4em] uppercase">
+            <p className="text-sm md:text-2xl text-white font-bold tracking-[0.2em] md:tracking-[0.4em] uppercase">
               Discover Life Offline
             </p>
           </motion.div>
@@ -99,7 +99,7 @@ export default function HeroVideo({ src }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 1.2 }}
-            className="text-base md:text-lg text-white/70 max-w-2xl mx-auto font-medium leading-relaxed"
+            className="text-sm md:text-lg text-white/70 max-w-2xl mx-auto font-medium leading-relaxed px-4"
           >
             Curated campus nights, rooftop flows, and underground pop-ups —
             <br className="hidden md:block" />
@@ -115,7 +115,7 @@ export default function HeroVideo({ src }) {
           >
             <Link
               href="/explore"
-              className="group relative px-10 py-5 bg-white text-black font-black uppercase tracking-[0.2em] text-sm rounded-full overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-[0_0_40px_rgba(255,255,255,0.6)]"
+              className="group relative px-8 py-4 md:px-10 md:py-5 bg-white text-black font-black uppercase tracking-[0.2em] text-xs md:text-sm rounded-full overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-[0_0_40px_rgba(255,255,255,0.6)]"
             >
               <span className="relative z-10">Explore Events</span>
               <div className="absolute inset-0 bg-gradient-to-r from-[#F44A22] to-[#FF6B4A] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -123,7 +123,7 @@ export default function HeroVideo({ src }) {
 
             <Link
               href="/create"
-              className="group px-10 py-5 border-2 border-white/30 text-white font-black uppercase tracking-[0.2em] text-sm rounded-full backdrop-blur-md hover:bg-white/10 hover:border-white/50 transition-all duration-300"
+              className="group px-8 py-4 md:px-10 md:py-5 border-2 border-white/30 text-white font-black uppercase tracking-[0.2em] text-xs md:text-sm rounded-full backdrop-blur-md hover:bg-white/10 hover:border-white/50 transition-all duration-300"
             >
               Create Event
             </Link>
