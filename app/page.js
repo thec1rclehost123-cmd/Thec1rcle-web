@@ -12,9 +12,7 @@ export default async function HomePage() {
   const { heroCards, categoryFilters, eventGrid, selects, interviews } = await getHomepageContent();
   return (
     <>
-      <SectionReveal>
-        <HeroVideo src={heroVideoSrc} />
-      </SectionReveal>
+      <HeroVideo src={heroVideoSrc} />
       <SectionReveal>
         <HeroCarousel cards={heroCards} />
       </SectionReveal>

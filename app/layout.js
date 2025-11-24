@@ -76,6 +76,6 @@ export default function RootLayout({ children }) {
           </div>
         </AppProviders>
       </body>
-    </html>
+    </html >
   );
 }

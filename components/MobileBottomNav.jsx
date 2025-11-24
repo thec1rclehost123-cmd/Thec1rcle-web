@@ -15,15 +15,15 @@ export default function MobileBottomNav() {
     { label: user ? "Profile" : "Account", href: user ? "/profile" : "/login" }
   ];
   return (
-    <nav className="fixed bottom-4 left-1/2 z-40 w-[90%] max-w-md -translate-x-1/2 rounded-full border border-white/15 bg-white/5 px-6 py-3 backdrop-blur-xl md:hidden">
-      <ul className="flex items-center justify-between text-xs font-semibold tracking-[0.25em] uppercase">
+    <nav className="fixed bottom-8 left-1/2 z-50 w-[85%] max-w-md -translate-x-1/2 rounded-full border border-white/25 bg-[#1a1a1a] px-8 py-5 shadow-[0_10px_40px_rgba(0,0,0,0.8)] md:hidden">
+      <ul className="flex items-center justify-between text-xs font-bold tracking-[0.2em] uppercase">
         {navItems.map((item) => {
           const active = pathname === item.href;
           return (
             <li key={item.href}>
               <Link
                 href={item.href}
-                className={`px-3 py-1 transition ${active ? "text-cream" : "text-white/70"
+                className={`transition-colors duration-300 ${active ? "text-[#F44A22]" : "text-white/60 hover:text-white"
                   }`}
               >
                 {item.label}

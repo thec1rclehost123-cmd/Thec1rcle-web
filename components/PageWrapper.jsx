@@ -6,11 +6,12 @@ import RouteTransition from "./RouteTransition";
 export default function PageWrapper({ children }) {
     const pathname = usePathname();
     const isHost = pathname?.startsWith("/host");
+    const isHomepage = pathname === "/";
 
     return (
         <main
             className={`
-        ${isHost ? "p-0" : "px-4 pt-24 pb-20 sm:px-8 sm:pt-40 sm:pb-32"}
+        ${isHost || isHomepage || pathname === "/app" || pathname === "/explore" ? "p-0" : "px-4 pt-24 pb-20 sm:px-8 sm:pt-32 sm:pb-32"}
       `}
         >
             <RouteTransition>{children}</RouteTransition>

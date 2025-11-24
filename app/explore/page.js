@@ -202,7 +202,20 @@ export default function ExplorePage() {
   const heroEvents = useMemo(() => {
     if (!events.length) return [];
     const comparator = sortComparators.Trending;
-    return [...events].sort(comparator).slice(0, 6);
+    const sorted = [...events].sort(comparator);
+
+    // Prioritize "After Dark AZ: Mansion Party"
+    const priorityIndex = sorted.findIndex(e =>
+      e.title?.toLowerCase().includes("after dark az") &&
+      e.title?.toLowerCase().includes("mansion party")
+    );
+
+    if (priorityIndex > -1) {
+      const [priorityEvent] = sorted.splice(priorityIndex, 1);
+      sorted.unshift(priorityEvent);
+    }
+
+    return sorted.slice(0, 6);
   }, [events]);
 
   const cityDropdownOptions = useMemo(() => {
@@ -385,7 +398,7 @@ export default function ExplorePage() {
           />
         </div>
 
-        <section className="mx-auto w-full max-w-[1600px] px-4 pb-24 pt-16 sm:px-6 lg:px-12">
+        <section className="mx-auto w-full max-w-[1600px] px-4 pb-24 sm:px-6 lg:px-12">
           <div className="space-y-12">
             <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
               <div className="space-y-3">
@@ -536,7 +549,7 @@ function HeroSkeleton({ status, error }) {
   return (
     <section className="relative w-full py-12">
       <div className="mx-auto w-full max-w-[1600px] px-6">
-        <div className="relative overflow-hidden rounded-[40px] border border-black/5 dark:border-white/5 bg-gradient-to-br from-black/5 to-transparent dark:from-white/5 dark:to-transparent h-[750px] flex items-center justify-center">
+        <div className="relative overflow-hidden rounded-[40px] border border-black/5 dark:border-white/5 bg-gradient-to-br from-black/5 to-transparent dark:from-white/5 dark:to-transparent min-h-[55vh] lg:min-h-[750px] h-auto flex items-center justify-center">
           <div className="absolute inset-0 bg-gradient-to-r from-black/5 dark:from-white/5 via-transparent to-transparent shimmer-block" />
           <div className="relative z-10 text-center space-y-4">
             <div className="w-16 h-16 border-4 border-black/10 dark:border-white/10 border-t-black dark:border-t-white rounded-full animate-spin mx-auto" />

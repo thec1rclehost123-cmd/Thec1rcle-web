@@ -2,7 +2,7 @@ import CreateEventForm from "../../components/CreateEventForm";
 
 export default function CreatePage() {
   return (
-    <section className="relative isolate min-h-screen overflow-hidden bg-white dark:bg-black px-4 pb-24 pt-12 sm:px-6">
+    <section className="relative isolate min-h-screen overflow-hidden bg-white dark:bg-black px-4 pb-24 sm:px-6">
       {/* Subtle grid background */}
       <div className="create-grid absolute inset-0 -z-10 opacity-20" aria-hidden="true" />
 

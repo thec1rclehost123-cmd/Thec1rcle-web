@@ -36,7 +36,7 @@ export default function ExploreCarouselHeader({ slides = [] }) {
 
   return (
     <section
-      className="relative w-full overflow-hidden min-h-[750px] flex items-center justify-center"
+      className="relative w-full overflow-hidden min-h-[55vh] lg:min-h-[750px] flex flex-col lg:flex-row items-start lg:items-center justify-start lg:justify-center pt-24 lg:pt-32"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
@@ -69,7 +69,7 @@ export default function ExploreCarouselHeader({ slides = [] }) {
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIiB4PSIwIiB5PSIwIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjwvZmlsdGVyPjxwYXRoIGQ9Ik0wIDBoMzAwdjMwMEgweiIgZmlsdGVyPSJ1cmwoI2EpIiBvcGFjaXR5PSIuMDUiLz48L3N2Zz4=')]" />
       </div>
 
-      <div className="relative z-10 w-full max-w-[1600px] px-6 lg:px-12 py-16">
+      <div className="relative z-10 w-full max-w-[1600px] px-6 lg:px-12 py-8 lg:py-16">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left: Content */}
           <motion.div

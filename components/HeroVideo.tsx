@@ -16,11 +16,7 @@ export default function HeroVideo({ src }) {
   return (
     <div className="relative h-screen w-full overflow-hidden bg-black">
       {/* Background Video Layer with Parallax */}
-      <motion.div
-        ref={ref}
-        style={{ y, scale }}
-        className="absolute inset-0 h-full w-full"
-      >
+      <div className="absolute inset-0 h-full w-full">
         <video
           autoPlay
           loop
@@ -30,7 +26,7 @@ export default function HeroVideo({ src }) {
         >
           <source src={src} type="video/mp4" />
         </video>
-      </motion.div>
+      </div>
 
       {/* Multi-layered Gradient Overlays */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/30 to-black/80" />
@@ -45,12 +41,12 @@ export default function HeroVideo({ src }) {
       {/* Hero Content */}
       <motion.div
         style={{ opacity }}
-        className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 z-10"
+        className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 z-10 pt-32"
       >
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.4, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
           className="relative max-w-7xl space-y-12"
         >
           {/* Main Title - THE C1RCLE with Premium Effects */}
@@ -58,8 +54,8 @@ export default function HeroVideo({ src }) {
             <motion.h1
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1.2, delay: 0.4 }}
-              className="text-5xl sm:text-7xl md:text-9xl lg:text-[12rem] xl:text-[14rem] font-heading font-black tracking-tighter leading-none"
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl xl:text-[10rem] font-heading font-black tracking-tighter leading-none"
               style={{
                 background: 'linear-gradient(135deg, #e5e7eb 0%, #d1d5db 50%, #e5e7eb 100%)',
                 backgroundSize: '200% auto',
@@ -77,7 +73,7 @@ export default function HeroVideo({ src }) {
             <motion.div
               initial={{ scaleX: 0 }}
               animate={{ scaleX: 1 }}
-              transition={{ duration: 1.2, delay: 0.8 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
               className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-transparent via-[#F44A22] to-transparent shadow-[0_0_20px_rgba(244,74,34,0.8)]"
             />
           </div>
@@ -86,7 +82,7 @@ export default function HeroVideo({ src }) {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 1 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
             className="backdrop-blur-xl bg-white/5 border border-white/20 rounded-full px-10 py-5 inline-block shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
           >
             <p className="text-sm md:text-2xl text-white font-bold tracking-[0.2em] md:tracking-[0.4em] uppercase">
@@ -98,7 +94,7 @@ export default function HeroVideo({ src }) {
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 1.2 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
             className="text-sm md:text-lg text-white/70 max-w-2xl mx-auto font-medium leading-relaxed px-4"
           >
             Curated campus nights, rooftop flows, and underground pop-ups —
@@ -110,7 +106,7 @@ export default function HeroVideo({ src }) {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 1.4 }}
+            transition={{ duration: 0.6, delay: 0.7 }}
             className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4"
           >
             <Link

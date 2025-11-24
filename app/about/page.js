@@ -170,7 +170,7 @@ function HeroSection() {
   const y = useTransform(scrollY, [0, 500], [0, 200]);
 
   return (
-    <section className="relative h-[110vh] flex flex-col items-center justify-center px-6 overflow-hidden">
+    <section className="relative min-h-[60vh] pt-64 pb-32 flex flex-col items-center justify-center px-6 overflow-hidden">
       <motion.div
         style={{ y }}
         className="text-center space-y-10 max-w-6xl mx-auto relative z-10"
@@ -237,7 +237,7 @@ function FeatureSection({ feature, index }) {
         className="flex-1 space-y-8"
         initial={{ opacity: 0, x: isEven ? -50 : 50 }}
         whileInView={{ opacity: 1, x: 0 }}
-        viewport={{ once: true, margin: "-20%" }}
+        viewport={{ once: true, margin: "-10%" }}
         transition={{ duration: 0.8, ease: "easeOut" }}
       >
         <div className="space-y-4">
@@ -263,7 +263,7 @@ function FeatureSection({ feature, index }) {
         className="flex-1 w-full"
         initial={{ opacity: 0, scale: 0.95, y: 40 }}
         whileInView={{ opacity: 1, scale: 1, y: 0 }}
-        viewport={{ once: true, margin: "-20%" }}
+        viewport={{ once: true, margin: "-10%" }}
         transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
       >
         <div className="relative aspect-[4/3] w-full rounded-[40px] border border-white/10 bg-white/5 backdrop-blur-sm overflow-hidden shadow-2xl">

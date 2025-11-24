@@ -21,7 +21,7 @@ import {
     Download
 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
     MetricCard,
     RevenueChart,
@@ -41,10 +41,19 @@ import {
     TicketTierList
 } from "../../components/host/AdvancedStudioComponents";
 import { useAuth } from "../../components/providers/AuthProvider";
+import { subscribeToHostStats } from "../../lib/firebase/host";
 
 export default function HostDashboard() {
     const { profile } = useAuth();
     const [activeMode, setActiveMode] = useState("club");
+    const [stats, setStats] = useState(null);
+
+    useEffect(() => {
+        if (profile?.uid) {
+            const unsub = subscribeToHostStats(profile.uid, setStats);
+            return () => unsub();
+        }
+    }, [profile?.uid]);
 
     const modes = [
         { id: "club", label: "Club Owner" },
@@ -64,13 +73,13 @@ export default function HostDashboard() {
                 </div>
 
                 <div className="flex items-center gap-6">
-                    {/* Mode Switcher Pill */}
-                    <div className="hidden md:flex bg-[#111] rounded-full p-1.5 border border-[#222]">
+                    {/* Mode Switcher Pill - Scrollable on Mobile */}
+                    <div className="flex w-full overflow-x-auto pb-2 md:w-auto md:pb-0 scrollbar-hide bg-[#111] rounded-full p-1.5 border border-[#222]">
                         {modes.map((mode) => (
                             <button
                                 key={mode.id}
                                 onClick={() => setActiveMode(mode.id)}
-                                className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all ${activeMode === mode.id
+                                className={`px-6 py-2.5 rounded-full text-sm font-bold whitespace-nowrap transition-all ${activeMode === mode.id
                                     ? "bg-white text-black shadow-sm"
                                     : "text-[#666] hover:text-white"
                                     }`}
@@ -80,7 +89,7 @@ export default function HostDashboard() {
                         ))}
                     </div>
 
-                    <button className="flex items-center gap-2 px-5 py-2.5 bg-[#F44A22] text-white rounded-full font-bold text-xs hover:bg-[#D43A12] transition-colors shadow-lg shadow-[#F44A22]/20">
+                    <button className="hidden md:flex items-center gap-2 px-5 py-2.5 bg-[#F44A22] text-white rounded-full font-bold text-xs hover:bg-[#D43A12] transition-colors shadow-lg shadow-[#F44A22]/20">
                         <Download className="w-3.5 h-3.5" />
                         Download Report
                     </button>
@@ -95,21 +104,23 @@ export default function HostDashboard() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.3 }}
-                    className="grid grid-cols-1 lg:grid-cols-12 gap-8"
+                    className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8"
                 >
                     {/* --- LEFT COLUMN (Main Metrics & Chart) - Span 8 --- */}
-                    <div className="lg:col-span-8 flex flex-col gap-8">
+                    <div className="lg:col-span-8 flex flex-col gap-6 lg:gap-8">
 
                         {/* Revenue Card (Large) */}
-                        <StudioCard className="min-h-[500px] flex flex-col justify-between p-8">
+                        <StudioCard className="min-h-[400px] lg:min-h-[500px] flex flex-col justify-between p-6 md:p-8">
                             <div className="flex justify-between items-start">
                                 <div>
                                     <h3 className="text-[#888] text-lg font-medium mb-3">Total Revenue</h3>
                                     <div className="flex items-end gap-5">
-                                        <h2 className="text-6xl font-heading font-bold text-white tracking-tight">₹79,675</h2>
+                                        <h2 className="text-6xl font-heading font-bold text-white tracking-tight">
+                                            ₹{stats?.totalRevenue?.toLocaleString() || "0"}
+                                        </h2>
                                         <div className="px-4 py-1.5 bg-[#C6F432] text-black text-sm font-bold rounded-full mb-3 flex items-center gap-1.5">
                                             <TrendingUp className="w-4 h-4" />
-                                            2.4%
+                                            {stats?.revenueChange || 0}%
                                         </div>
                                     </div>
                                     <p className="text-[#666] text-base mt-2">This month</p>
@@ -124,14 +135,32 @@ export default function HostDashboard() {
                                 </div>
                             </div>
 
-                            <RevenueChart />
+                            <RevenueChart data={stats?.revenueHistory} />
                         </StudioCard>
 
                         {/* Secondary Metrics Row */}
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                            <MetricCard title="Active Guests" value="312" change="4.7%" icon={Users} delay={0.1} />
-                            <MetricCard title="Ticket Sales" value="1,240" change="12%" icon={Ticket} delay={0.2} />
-                            <MetricCard title="Bar Revenue" value="₹18.4k" change="8%" icon={Zap} delay={0.3} />
+                            <MetricCard
+                                title="Active Guests"
+                                value={stats?.activeGuests?.toLocaleString() || "0"}
+                                change={`${stats?.guestsChange || 0}%`}
+                                icon={Users}
+                                delay={0.1}
+                            />
+                            <MetricCard
+                                title="Ticket Sales"
+                                value={stats?.ticketSales?.toLocaleString() || "0"}
+                                change={`${stats?.salesChange || 0}%`}
+                                icon={Ticket}
+                                delay={0.2}
+                            />
+                            <MetricCard
+                                title="Bar Revenue"
+                                value={`₹${(stats?.barRevenue / 1000).toFixed(1)}k`}
+                                change={`${stats?.barRevenueChange || 0}%`}
+                                icon={Zap}
+                                delay={0.3}
+                            />
                         </div>
 
                         {/* Bottom Row: Popular Events & Demographics */}
@@ -142,21 +171,25 @@ export default function HostDashboard() {
                                     <button className="text-[#666] text-sm font-bold hover:text-white">View All</button>
                                 </div>
                                 <div className="space-y-5">
-                                    {[1, 2, 3].map((i) => (
-                                        <div key={i} className="flex items-center gap-5 p-4 rounded-2xl bg-[#111] border border-[#222]">
-                                            <div className="w-14 h-14 rounded-xl bg-[#222] flex items-center justify-center text-[#666]">
-                                                <CalendarIcon className="w-6 h-6" />
+                                    {(stats?.popularEvents || []).length > 0 ? (
+                                        stats.popularEvents.map((event, i) => (
+                                            <div key={i} className="flex items-center gap-5 p-4 rounded-2xl bg-[#111] border border-[#222]">
+                                                <div className="w-14 h-14 rounded-xl bg-[#222] flex items-center justify-center text-[#666]">
+                                                    <CalendarIcon className="w-6 h-6" />
+                                                </div>
+                                                <div className="flex-1">
+                                                    <h4 className="text-white font-bold text-base">{event.name}</h4>
+                                                    <p className="text-[#666] text-sm">{event.date}</p>
+                                                </div>
+                                                <div className="text-right">
+                                                    <p className="text-white font-bold text-base">{event.guests}</p>
+                                                    <p className="text-[#666] text-xs">Guests</p>
+                                                </div>
                                             </div>
-                                            <div className="flex-1">
-                                                <h4 className="text-white font-bold text-base">Neon Jungle Night</h4>
-                                                <p className="text-[#666] text-sm">Fri, 24 Nov • 10 PM</p>
-                                            </div>
-                                            <div className="text-right">
-                                                <p className="text-white font-bold text-base">342</p>
-                                                <p className="text-[#666] text-xs">Guests</p>
-                                            </div>
-                                        </div>
-                                    ))}
+                                        ))
+                                    ) : (
+                                        <p className="text-[#666] text-center py-4">No events data available</p>
+                                    )}
                                 </div>
                             </StudioCard>
 
@@ -164,7 +197,7 @@ export default function HostDashboard() {
                                 <div className="flex justify-between items-center mb-8">
                                     <h3 className="text-white text-xl font-bold">Age Range</h3>
                                 </div>
-                                <DemographicsChart />
+                                <DemographicsChart data={stats?.demographics?.age} />
                                 <div className="mt-8 flex justify-center gap-8">
                                     <div className="flex items-center gap-2">
                                         <div className="w-2 h-2 rounded-full bg-[#F44A22]" />
@@ -209,7 +242,9 @@ export default function HostDashboard() {
                             <div className="mt-8 pt-8 border-t border-[#222]">
                                 <div className="flex justify-between items-center">
                                     <span className="text-[#888] text-base font-medium">Total Sales</span>
-                                    <span className="text-3xl font-heading font-bold text-white">₹18,434</span>
+                                    <span className="text-3xl font-heading font-bold text-white">
+                                        ₹{stats?.totalRevenue?.toLocaleString() || "0"}
+                                    </span>
                                 </div>
                             </div>
                         </StudioCard>
@@ -219,7 +254,7 @@ export default function HostDashboard() {
                             <div className="flex justify-between items-center mb-6">
                                 <h3 className="text-white text-xl font-bold">Gender Split</h3>
                             </div>
-                            <GenderChart />
+                            <GenderChart data={stats?.demographics?.gender} />
                         </StudioCard>
 
                         {/* Geo Map */}
@@ -228,7 +263,7 @@ export default function HostDashboard() {
                                 <h3 className="text-white text-xl font-bold">Top Locations</h3>
                                 <Globe className="w-5 h-5 text-[#666]" />
                             </div>
-                            <GeoList />
+                            <GeoList data={stats?.demographics?.geo} />
                         </StudioCard>
 
                     </div>

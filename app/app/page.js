@@ -55,10 +55,10 @@ const FeatureCard = ({ title, subtitle, video, index, align }) => {
 
   const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
   const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.9, 1, 0.9]);
-  const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0]);
+  const opacity = useTransform(scrollYProgress, [0, 0.15, 0.85, 1], [0, 1, 1, 0]);
 
   return (
-    <section ref={ref} className="min-h-screen flex items-center justify-center py-24 relative overflow-hidden">
+    <section ref={ref} className="min-h-[50vh] flex items-center justify-center py-24 relative overflow-hidden">
       {/* Background Glow */}
       <div className={`absolute top-1/2 ${align === 'left' ? 'left-0' : 'right-0'} w-[50vw] h-[50vw] bg-[#F44A22] rounded-full blur-[150px] opacity-10 pointer-events-none`} />
 
@@ -74,7 +74,7 @@ const FeatureCard = ({ title, subtitle, video, index, align }) => {
             <div className="h-[1px] w-20 bg-white/20" />
           </div>
 
-          <h2 className="text-7xl md:text-9xl font-black text-white mb-8 leading-[0.85] tracking-tighter uppercase">
+          <h2 className="text-5xl sm:text-7xl md:text-9xl font-black text-white mb-8 leading-[0.85] tracking-tighter uppercase">
             {title}
           </h2>
 
@@ -145,16 +145,36 @@ const ManifestoLine = ({ children, className = "" }) => {
   );
 };
 
+import { addDoc, collection } from "firebase/firestore";
+import { getFirebaseDb } from "../../lib/firebase/client";
+
+// ... (existing imports)
+
 export default function AppPage() {
   const [email, setEmail] = useState('');
   const [joined, setJoined] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleJoin = (e) => {
+  const handleJoin = async (e) => {
     e.preventDefault();
     if (email) {
-      setJoined(true);
-      setEmail('');
-      setTimeout(() => setJoined(false), 5000);
+      setLoading(true);
+      try {
+        const db = getFirebaseDb();
+        await addDoc(collection(db, "waitlist"), {
+          email,
+          joinedAt: new Date().toISOString(),
+          source: "app_page"
+        });
+        setJoined(true);
+        setEmail('');
+        setTimeout(() => setJoined(false), 5000);
+      } catch (error) {
+        console.error("Error joining waitlist:", error);
+        alert("Something went wrong. Please try again.");
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -174,7 +194,7 @@ export default function AppPage() {
           <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black" />
         </div>
 
-        <div className="relative z-10 text-center px-6 mix-blend-difference">
+        <div className="relative z-10 text-center px-6">
           <motion.h1
             initial={{ y: 100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -190,13 +210,23 @@ export default function AppPage() {
             transition={{ delay: 0.5, duration: 1 }}
             className="flex flex-col items-center gap-6"
           >
-            <p className="text-2xl md:text-3xl font-light text-white uppercase tracking-[0.3em]">
-              The Future of <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-white/50">Nightlife</span>
+            <p className="text-xl md:text-3xl font-bold text-white uppercase tracking-[0.3em]">
+              The Future of <span className="text-[#F44A22]">Nightlife</span>
             </p>
 
-            <div className="mt-8 flex gap-4">
-              <MagneticButton className="px-10 py-5 bg-white text-black rounded-full font-black text-xl uppercase tracking-wider hover:scale-105 transition-transform">
-                <span onClick={scrollToWaitlist}>Download App</span>
+            <div className="mt-10 flex flex-col sm:flex-row gap-5 items-center justify-center">
+              <MagneticButton className="group relative px-8 py-4 bg-white text-black rounded-full font-black text-sm md:text-base uppercase tracking-wider hover:scale-105 transition-all duration-300 min-w-[200px] flex items-center justify-center gap-3 shadow-[0_0_30px_rgba(255,255,255,0.3)]">
+                <svg viewBox="0 0 384 512" fill="currentColor" className="w-5 h-5 mb-1">
+                  <path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 46.9 104.3 84.7 104.3 29.6 0 36.1-20.7 75.8-20.7 36.9 0 45.8 20.7 77.2 20.7 35.2 0 66.4-64.9 81.2-104.3-53.5-26.4-62.4-69.8-58.6-86.1zM206.5 71.1c17.6-21.6 30.6-50.6 26.9-80.1-25.3 2.8-56.8 16.7-74.8 40.6-15.5 19.4-28.6 49.4-25.3 78.8 28.1 2.8 54.2-16.1 73.2-39.3z" />
+                </svg>
+                <span>App Store</span>
+              </MagneticButton>
+
+              <MagneticButton className="group relative px-8 py-4 bg-transparent border-2 border-white !text-white rounded-full font-black text-sm md:text-base uppercase tracking-wider hover:bg-white hover:!text-black transition-all duration-300 min-w-[200px] flex items-center justify-center gap-3 shadow-[0_0_15px_rgba(255,255,255,0.1)]">
+                <svg viewBox="0 0 576 512" fill="currentColor" className="w-5 h-5 mb-0.5 fill-white group-hover:fill-black">
+                  <path d="M420.55,301.93a24,24,0,1,1,24-24,24,24,0,0,1-24,24m-265.1,0a24,24,0,1,1,24-24,24,24,0,0,1-24,24m273.7-144.48,47.94-83a10,10,0,1,0-17.36-10l-48.53,84.07a255.52,255.52,0,0,0-242.4,0l-48.53-84.07a10,10,0,1,0-17.36,10l47.94,83C66.6,203.34,0,292.5,0,392c0,12.33,1.34,24.25,3.79,35.82V448a64,64,0,0,0,64,64H508.21a64,64,0,0,0,64-64V427.82c2.45-11.57,3.79-23.49,3.79-35.82C576,292.5,509.4,203.34,429.15,157.45Z" />
+                </svg>
+                <span className="text-white group-hover:text-black">Play Store</span>
               </MagneticButton>
             </div>
           </motion.div>
@@ -259,17 +289,17 @@ export default function AppPage() {
               <span className="text-white font-black text-2xl uppercase tracking-wider">Welcome to the list.</span>
             </motion.div>
           ) : (
-            <form onSubmit={handleJoin} className="bg-black p-4 rounded-full flex items-center shadow-2xl transform hover:scale-105 transition-transform duration-300">
+            <form onSubmit={handleJoin} className="bg-black p-2 sm:p-4 rounded-[2rem] sm:rounded-full flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-0 shadow-2xl transform hover:scale-105 transition-transform duration-300">
               <input
                 type="email"
                 placeholder="ENTER YOUR EMAIL"
-                className="flex-1 bg-transparent text-white px-8 py-4 focus:outline-none placeholder-white/40 font-bold text-xl uppercase tracking-wider min-w-0"
+                className="w-full sm:flex-1 bg-transparent text-white px-6 py-4 sm:px-8 focus:outline-none placeholder-white/40 font-bold text-lg sm:text-xl uppercase tracking-wider text-center sm:text-left"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
-              <button type="submit" className="bg-white text-black px-12 py-6 rounded-full font-black uppercase tracking-wider hover:bg-gray-200 transition-colors text-lg whitespace-nowrap">
-                Join Now
+              <button type="submit" disabled={loading} className="w-full sm:w-auto bg-white text-black px-8 py-4 sm:px-12 sm:py-6 rounded-full font-black uppercase tracking-wider hover:bg-gray-200 transition-colors text-lg whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed">
+                {loading ? "Joining..." : "Join Now"}
               </button>
             </form>
           )}

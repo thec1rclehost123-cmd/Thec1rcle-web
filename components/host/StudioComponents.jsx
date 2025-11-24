@@ -83,11 +83,11 @@ export const MetricCard = ({ title, value, change, trend = "up", icon: Icon, del
 
 // --- Charts ---
 
-export const RevenueChart = () => {
+export const RevenueChart = ({ data }) => {
     const [hoveredIndex, setHoveredIndex] = useState(null);
 
     // Smooth Curve Data
-    const points = [20, 45, 35, 55, 45, 70, 60, 85, 75, 95, 85, 100];
+    const points = data || [20, 45, 35, 55, 45, 70, 60, 85, 75, 95, 85, 100];
     const max = 120;
     const width = 100;
     const height = 50;
@@ -104,6 +104,7 @@ export const RevenueChart = () => {
 
     // Generate Smooth Bezier Path
     const generateSmoothPath = (points, width, height) => {
+        if (!points || points.length === 0) return "";
         let path = `M 0 ${height - (points[0] / max) * height}`;
         for (let i = 0; i < points.length - 1; i++) {
             const x0 = (i / (points.length - 1)) * width;
@@ -221,8 +222,8 @@ export const RevenueChart = () => {
     );
 };
 
-export const DemographicsChart = () => {
-    const data = [
+export const DemographicsChart = ({ data }) => {
+    const chartData = data || [
         { label: "18-21", value: 15, color: "#1A1A1A" },
         { label: "21-25", value: 45, color: "#F44A22" }, // Orange
         { label: "25-30", value: 25, color: "#C6F432" }, // Acid Green
@@ -231,7 +232,7 @@ export const DemographicsChart = () => {
 
     return (
         <div className="flex items-end gap-4 h-40 mt-4">
-            {data.map((item, i) => (
+            {chartData.map((item, i) => (
                 <div key={item.label} className="flex-1 flex flex-col items-center gap-3 group h-full justify-end">
                     <div className="w-full relative flex-1 flex items-end bg-white/[0.02] rounded-2xl overflow-hidden border border-white/[0.02]">
                         <motion.div
@@ -249,8 +250,8 @@ export const DemographicsChart = () => {
     );
 };
 
-export const GeoList = () => {
-    const locations = [
+export const GeoList = ({ data }) => {
+    const locations = data || [
         { city: "Mumbai", percent: 42 },
         { city: "Bangalore", percent: 28 },
         { city: "Delhi", percent: 15 },
@@ -278,8 +279,8 @@ export const GeoList = () => {
     );
 };
 
-export const GenderChart = () => {
-    const data = [
+export const GenderChart = ({ data }) => {
+    const chartData = data || [
         { label: "Female", value: 45, color: "#F44A22" },
         { label: "Male", value: 40, color: "#C6F432" },
         { label: "Other", value: 15, color: "#FFFFFF" },
@@ -293,7 +294,7 @@ export const GenderChart = () => {
         <div className="flex items-center gap-8 h-48 mt-4 px-4">
             <div className="relative w-32 h-32 flex-shrink-0">
                 <svg viewBox="0 0 100 100" className="transform -rotate-90 w-full h-full">
-                    {data.map((item, i) => {
+                    {chartData.map((item, i) => {
                         const strokeDasharray = `${(item.value / 100) * circumference} ${circumference}`;
                         const strokeDashoffset = -currentOffset;
                         currentOffset += (item.value / 100) * circumference;
@@ -324,7 +325,7 @@ export const GenderChart = () => {
             </div>
 
             <div className="flex flex-col gap-4 flex-1">
-                {data.map((item) => (
+                {chartData.map((item) => (
                     <div key={item.label} className="flex items-center justify-between group">
                         <div className="flex items-center gap-2">
                             <div className="w-2 h-2 rounded-full transition-transform group-hover:scale-125" style={{ backgroundColor: item.color }} />
