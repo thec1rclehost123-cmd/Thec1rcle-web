@@ -10,7 +10,7 @@ import { useAuth } from "./providers/AuthProvider";
 
 export default function CheckoutForm({ event, selectedTickets, totalAmount }) {
     const router = useRouter();
-    const { user } = useAuth();
+    const { user, updateEventList } = useAuth();
     const [paymentMethod, setPaymentMethod] = useState("card");
     const [isProcessing, setIsProcessing] = useState(false);
     const [paymentError, setPaymentError] = useState("");
@@ -58,6 +58,17 @@ export default function CheckoutForm({ event, selectedTickets, totalAmount }) {
 
             if (!response.ok) {
                 throw new Error(data.error || "Payment failed");
+            }
+
+            // Update local profile to show ticket
+            if (user) {
+                try {
+                    // Assuming we have access to updateEventList from useAuth
+                    // We need to destructure it from useAuth() first
+                    await updateEventList("attendedEvents", event.id, true);
+                } catch (err) {
+                    console.error("Failed to update local profile:", err);
+                }
             }
 
             // Redirect to confirmation with real order ID

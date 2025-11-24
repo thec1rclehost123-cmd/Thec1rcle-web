@@ -84,7 +84,14 @@ export default function EventRSVP({ event, host }) {
   const gradientEnd = Array.isArray(event?.gradient) ? event.gradient[1] : event?.gradientEnd || "#0b0b0f";
   const guestCount = event?.guestCount ?? 580 + previewGuests.length * 14;
 
-  const hasRSVPd = Boolean(event?.userHasRSVPd) || Boolean(event?.id && profile?.attendedEvents?.includes(event.id));
+  const hasRSVPd = Boolean(event?.id && profile?.attendedEvents?.includes(event.id));
+
+  console.log("EventRSVP Debug:", {
+    eventId: event?.id,
+    profileId: profile?.uid,
+    attendedEvents: profile?.attendedEvents,
+    hasRSVPd
+  });
 
   const ensureAuthenticated = () => {
     if (user) return true;

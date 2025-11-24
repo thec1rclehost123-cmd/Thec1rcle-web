@@ -549,7 +549,7 @@ function HeroSkeleton({ status, error }) {
   return (
     <section className="relative w-full py-12">
       <div className="mx-auto w-full max-w-[1600px] px-6">
-        <div className="relative overflow-hidden rounded-[40px] border border-black/5 dark:border-white/5 bg-gradient-to-br from-black/5 to-transparent dark:from-white/5 dark:to-transparent min-h-[55vh] lg:min-h-[750px] h-auto flex items-center justify-center">
+        <div className="relative overflow-hidden rounded-[40px] border border-black/5 dark:border-white/5 bg-gradient-to-br from-black/5 to-transparent dark:from-white/5 dark:to-transparent min-h-[50vh] lg:min-h-[750px] h-auto flex items-center justify-center">
           <div className="absolute inset-0 bg-gradient-to-r from-black/5 dark:from-white/5 via-transparent to-transparent shimmer-block" />
           <div className="relative z-10 text-center space-y-4">
             <div className="w-16 h-16 border-4 border-black/10 dark:border-white/10 border-t-black dark:border-t-white rounded-full animate-spin mx-auto" />
