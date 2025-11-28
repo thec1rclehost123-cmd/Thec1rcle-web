@@ -16,7 +16,7 @@ export default function EventsPage() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (!user) return;
+        if (!user?.uid) return;
 
         const db = getFirebaseDb();
         const q = query(
@@ -24,22 +24,32 @@ export default function EventsPage() {
             where("host", "==", user.uid)
         );
 
-        const unsubscribe = onSnapshot(q, (snapshot) => {
-            const eventsData = snapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data()
-            }));
-            // Client-side sort
-            eventsData.sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
-            setEvents(eventsData);
+        let unsubscribe;
+        try {
+            unsubscribe = onSnapshot(q, (snapshot) => {
+                const eventsData = snapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+                // Client-side sort
+                eventsData.sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
+                setEvents(eventsData);
+                setLoading(false);
+            }, (error) => {
+                console.error("Error fetching events:", error);
+                setLoading(false);
+            });
+        } catch (err) {
+            console.error("Failed to subscribe to events:", err);
             setLoading(false);
-        }, (error) => {
-            console.error("Error fetching events:", error);
-            setLoading(false);
-        });
+        }
 
-        return () => unsubscribe();
-    }, [user]);
+        return () => {
+            if (typeof unsubscribe === 'function') {
+                unsubscribe();
+            }
+        };
+    }, [user?.uid]);
 
     const formatDate = (dateStr) => {
         if (!dateStr) return "";

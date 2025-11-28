@@ -2,8 +2,14 @@
 import { useEffect } from "react";
 import Lenis from "lenis";
 
+import { usePathname } from "next/navigation";
+
 export default function SmoothScroll() {
+    const pathname = usePathname();
+
     useEffect(() => {
+        if (pathname?.startsWith("/host")) return;
+
         const lenis = new Lenis({
             duration: 1.2,
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -25,7 +31,7 @@ export default function SmoothScroll() {
         return () => {
             lenis.destroy();
         };
-    }, []);
+    }, [pathname]);
 
     return null;
 }

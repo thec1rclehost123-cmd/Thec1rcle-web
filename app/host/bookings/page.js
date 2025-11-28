@@ -45,7 +45,7 @@ export default function BookingsPage() {
 
     // Fetch Bookings
     useEffect(() => {
-        if (!user) return;
+        if (!user?.uid) return;
         const db = getFirebaseDb();
 
         const q = query(
@@ -54,20 +54,30 @@ export default function BookingsPage() {
             orderBy("createdAt", "desc")
         );
 
-        const unsubscribe = onSnapshot(q, (snapshot) => {
-            const bookingsData = snapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data()
-            }));
-            setBookings(bookingsData);
+        let unsubscribe;
+        try {
+            unsubscribe = onSnapshot(q, (snapshot) => {
+                const bookingsData = snapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+                setBookings(bookingsData);
+                setLoading(false);
+            }, (error) => {
+                console.error("Error fetching bookings:", error);
+                setLoading(false);
+            });
+        } catch (err) {
+            console.error("Failed to subscribe to bookings:", err);
             setLoading(false);
-        }, (error) => {
-            console.error("Error fetching bookings:", error);
-            setLoading(false);
-        });
+        }
 
-        return () => unsubscribe();
-    }, [user]);
+        return () => {
+            if (typeof unsubscribe === 'function') {
+                unsubscribe();
+            }
+        };
+    }, [user?.uid]);
 
     const handleAddReservation = async (e) => {
         e.preventDefault();

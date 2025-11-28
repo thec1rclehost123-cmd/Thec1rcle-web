@@ -51,7 +51,15 @@ export default function HostDashboard() {
     useEffect(() => {
         if (profile?.uid) {
             const unsub = subscribeToHostStats(profile.uid, setStats);
-            return () => unsub();
+            return () => {
+                if (typeof unsub === 'function') {
+                    try {
+                        unsub();
+                    } catch (error) {
+                        console.error("Error unsubscribing from host stats:", error);
+                    }
+                }
+            };
         }
     }, [profile?.uid]);
 

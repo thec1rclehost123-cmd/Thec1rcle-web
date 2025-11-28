@@ -41,13 +41,13 @@ export default function HeroVideo({ src }) {
       {/* Hero Content */}
       <motion.div
         style={{ opacity }}
-        className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 z-10 pt-32"
+        className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 z-10 pt-20 md:pt-32"
       >
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
-          className="relative max-w-7xl space-y-12"
+          className="relative max-w-7xl space-y-6 md:space-y-12"
         >
           {/* Main Title - THE C1RCLE with Premium Effects */}
           <div className="relative">

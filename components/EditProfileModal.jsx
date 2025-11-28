@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "./providers/AuthProvider";
 import { getFirebaseStorage } from "../lib/firebase/client";
@@ -157,7 +157,19 @@ export default function EditProfileModal({ open, onClose }) {
         }
     };
 
-    return (
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    if (!mounted) return null;
+
+    // Use React Portal to render outside of the parent container (which has transforms)
+    // This ensures fixed positioning works relative to the viewport
+    const { createPortal } = require("react-dom");
+
+    return createPortal(
         <AnimatePresence>
             {open && (
                 <>
@@ -359,6 +371,7 @@ export default function EditProfileModal({ open, onClose }) {
                     )}
                 </>
             )}
-        </AnimatePresence>
+        </AnimatePresence>,
+        document.body
     );
 }

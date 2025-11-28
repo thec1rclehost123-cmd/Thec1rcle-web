@@ -8,6 +8,7 @@ import { useAuth } from "../../components/providers/AuthProvider";
 import { fetchEventsByIds } from "../../lib/firebase/eventsClient";
 import EditProfileModal from "../../components/EditProfileModal";
 import EventGrid from "../../components/EventGrid";
+import Footer from "../../components/Footer";
 
 // --- Visual Components ---
 
@@ -180,57 +181,67 @@ const EmptyState = ({ type }) => (
   </div>
 );
 
-const TicketItem = ({ order }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    className="group relative overflow-hidden rounded-[24px] bg-white text-black transition-transform hover:-translate-y-1"
-  >
-    <div className="flex h-full flex-col md:flex-row">
-      {/* Left: Image */}
-      <div className="relative h-48 w-full md:h-auto md:w-1/3">
-        {order.eventImage ? (
-          <Image src={order.eventImage} alt={order.eventTitle} fill className="object-cover" />
-        ) : (
-          <div className="h-full w-full bg-black" />
-        )}
-        <div className="absolute inset-0 bg-black/20" />
-        <div className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-black backdrop-blur-md">
-          {order.status}
-        </div>
-      </div>
+const TicketItem = ({ order }) => {
+  if (!order) return null;
 
-      {/* Right: Details */}
-      <div className="flex flex-1 flex-col justify-between p-6">
-        <div>
-          <div className="flex items-start justify-between">
-            <h3 className="font-heading text-2xl font-black uppercase leading-none">{order.eventTitle}</h3>
-            <span className="font-mono text-lg font-bold">₹{order.totalAmount}</span>
-          </div>
-          <div className="mt-4 space-y-1">
-            <p className="text-xs font-bold uppercase tracking-wider text-black/60">
-              {new Date(order.eventDate).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })} • {order.eventTime}
-            </p>
-            <p className="text-xs font-bold uppercase tracking-wider text-black/60">{order.eventLocation}</p>
+  const eventDate = order.eventDate ? new Date(order.eventDate) : null;
+  const isValidDate = eventDate && !isNaN(eventDate.getTime());
+  const dateString = isValidDate
+    ? eventDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
+    : 'Date TBA';
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="group relative overflow-hidden rounded-[24px] bg-white text-black transition-transform hover:-translate-y-1"
+    >
+      <div className="flex h-full flex-col md:flex-row">
+        {/* Left: Image */}
+        <div className="relative h-48 w-full md:h-auto md:w-1/3">
+          {order.eventImage ? (
+            <Image src={order.eventImage} alt={order.eventTitle || "Event"} fill className="object-cover" />
+          ) : (
+            <div className="h-full w-full bg-black" />
+          )}
+          <div className="absolute inset-0 bg-black/20" />
+          <div className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-black backdrop-blur-md">
+            {order.status || "Pending"}
           </div>
         </div>
 
-        <div className="mt-6 flex items-center justify-between border-t border-black/10 pt-4">
-          <div className="flex gap-2">
-            {order.tickets.map((t, i) => (
-              <span key={i} className="rounded-md bg-black/5 px-2 py-1 text-[10px] font-bold uppercase text-black/60">
-                {t.quantity}x {t.name}
-              </span>
-            ))}
+        {/* Right: Details */}
+        <div className="flex flex-1 flex-col justify-between p-6">
+          <div>
+            <div className="flex items-start justify-between">
+              <h3 className="font-heading text-2xl font-black uppercase leading-none">{order.eventTitle || "Untitled Event"}</h3>
+              <span className="font-mono text-lg font-bold">₹{order.totalAmount || 0}</span>
+            </div>
+            <div className="mt-4 space-y-1">
+              <p className="text-xs font-bold uppercase tracking-wider text-black/60">
+                {dateString} • {order.eventTime || "Time TBA"}
+              </p>
+              <p className="text-xs font-bold uppercase tracking-wider text-black/60">{order.eventLocation || "Location TBA"}</p>
+            </div>
           </div>
-          <button className="text-[10px] font-bold uppercase tracking-widest underline decoration-2 underline-offset-4 opacity-60 hover:opacity-100">
-            View Ticket
-          </button>
+
+          <div className="mt-6 flex items-center justify-between border-t border-black/10 pt-4">
+            <div className="flex gap-2">
+              {Array.isArray(order.tickets) && order.tickets.map((t, i) => (
+                <span key={i} className="rounded-md bg-black/5 px-2 py-1 text-[10px] font-bold uppercase text-black/60">
+                  {t.quantity || 1}x {t.name || "Ticket"}
+                </span>
+              ))}
+            </div>
+            <button className="text-[10px] font-bold uppercase tracking-widest underline decoration-2 underline-offset-4 opacity-60 hover:opacity-100">
+              View Ticket
+            </button>
+          </div>
         </div>
       </div>
-    </div>
-  </motion.div>
-);
+    </motion.div>
+  );
+};
 
 // --- Main Page ---
 
@@ -328,7 +339,7 @@ export default function ProfilePage() {
     <div className="min-h-screen bg-[#030303] text-white selection:bg-iris selection:text-white">
       <AuroraBackground />
 
-      <div className="relative z-10 mx-auto max-w-5xl px-4 pb-24 pt-32 sm:px-6 lg:px-8">
+      <div className="relative z-10 mx-auto max-w-5xl px-4 pb-10 pt-32 sm:px-6 lg:px-8">
 
         {/* Profile Card */}
         <motion.div
@@ -422,6 +433,7 @@ export default function ProfilePage() {
           </AnimatePresence>
         </div>
       </div>
+      <Footer />
 
       <EditProfileModal open={editModalOpen} onClose={() => setEditModalOpen(false)} />
     </div>

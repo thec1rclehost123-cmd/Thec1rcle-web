@@ -49,7 +49,7 @@ export default function HostLayout({ children }) {
     ];
 
     return (
-        <div className="min-h-screen bg-[#050505] text-white font-sans selection:bg-[#F44A22] selection:text-white flex flex-col overflow-hidden relative">
+        <div className="h-screen bg-[#050505] text-white font-sans selection:bg-[#F44A22] selection:text-white flex flex-col overflow-hidden relative">
 
             {/* Background Grid Pattern - Adds Structure */}
             <div className="absolute inset-0 z-0 pointer-events-none">
@@ -85,7 +85,7 @@ export default function HostLayout({ children }) {
                                     href={item.href}
                                     className={`relative px-8 py-3 rounded-full text-base font-bold transition-all duration-300 ${isActive
                                         ? "bg-[#F44A22] text-white shadow-lg shadow-[#F44A22]/20"
-                                        : "text-[#888] hover:text-white hover:bg-white/[0.05]"
+                                        : "text-[#ccc] hover:text-white hover:bg-white/[0.05]"
                                         }`}
                                 >
                                     {item.label}

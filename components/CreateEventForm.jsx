@@ -26,8 +26,9 @@ const createInitialFormState = () => ({
   gradientStart: "#0b0b0b",
   gradientEnd: "#050505",
   guests: "",
-  ticketName: "General Admission",
-  ticketPrice: "999",
+  tickets: [
+    { id: "default", name: "General Admission", price: "999", quantity: 150 }
+  ],
   accentColor: accentPalette[0],
   recurring: false,
   youtube: "",
@@ -191,12 +192,11 @@ export default function CreateEventForm() {
           spotifyTrack: form.spotifyTrack,
           features: form.features,
           accentColor: form.accentColor,
-          tickets: [{
-            id: "default",
-            name: form.ticketName,
-            price: Number(form.ticketPrice),
-            quantity: 150
-          }],
+          tickets: form.tickets.map(t => ({
+            ...t,
+            price: Number(t.price),
+            quantity: Number(t.quantity || 150)
+          })),
           settings: {
             showExplore,
             password: password ? form.eventPassword : "",
@@ -383,32 +383,80 @@ export default function CreateEventForm() {
 
           {/* Tickets with gradient */}
           <GlassSection icon={<IconTicket />} title="Tickets" badge="Pricing">
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              className="group relative overflow-hidden rounded-xl border border-black/20 dark:border-white/20 bg-gradient-to-br from-black/10 to-black/5 dark:from-white/10 dark:to-white/5 p-4"
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-iris/0 via-iris/5 to-iris/0 opacity-0 group-hover:opacity-100 transition-opacity" />
-              <div className="relative flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-iris to-iris-dim flex items-center justify-center">
-                    <IconTicket />
+            <div className="space-y-3">
+              {form.tickets.map((ticket, index) => (
+                <motion.div
+                  key={ticket.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="group relative overflow-hidden rounded-xl border border-black/20 dark:border-white/20 bg-gradient-to-br from-black/10 to-black/5 dark:from-white/10 dark:to-white/5 p-4"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-iris/0 via-iris/5 to-iris/0 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="relative flex items-center gap-4">
+                    <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-iris to-iris-dim flex items-center justify-center shrink-0">
+                      <IconTicket />
+                    </div>
+                    <div className="flex-1 grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-xs text-black/50 dark:text-white/50 mb-1 block">Ticket Name</label>
+                        <input
+                          type="text"
+                          value={ticket.name}
+                          onChange={(e) => {
+                            const newTickets = [...form.tickets];
+                            newTickets[index].name = e.target.value;
+                            setForm(prev => ({ ...prev, tickets: newTickets }));
+                          }}
+                          className="w-full bg-transparent text-black dark:text-white font-semibold placeholder:text-black/30 dark:placeholder:text-white/30 focus:outline-none border-b border-transparent focus:border-iris/50 transition-all"
+                          placeholder="Ticket Name"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-xs text-black/50 dark:text-white/50 mb-1 block">Price (₹)</label>
+                        <input
+                          type="number"
+                          value={ticket.price}
+                          onChange={(e) => {
+                            const newTickets = [...form.tickets];
+                            newTickets[index].price = e.target.value;
+                            setForm(prev => ({ ...prev, tickets: newTickets }));
+                          }}
+                          className="w-full bg-transparent text-black dark:text-white font-semibold placeholder:text-black/30 dark:placeholder:text-white/30 focus:outline-none border-b border-transparent focus:border-iris/50 transition-all"
+                          placeholder="999"
+                        />
+                      </div>
+                    </div>
+                    {form.tickets.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const newTickets = form.tickets.filter((_, i) => i !== index);
+                          setForm(prev => ({ ...prev, tickets: newTickets }));
+                        }}
+                        className="text-black/40 dark:text-white/40 hover:text-red-500 transition-colors p-2"
+                      >
+                        <IconTrash />
+                      </button>
+                    )}
                   </div>
-                  <div>
-                    <div className="text-black dark:text-white font-semibold">{form.ticketName}</div>
-                    <div className="text-sm text-black/60 dark:text-white/60">₹{form.ticketPrice}</div>
-                  </div>
-                </div>
-                <button type="button" className="text-black/60 dark:text-white/60 hover:text-black dark:hover:text-white transition">
-                  <IconEdit />
-                </button>
-              </div>
-            </motion.div>
+                </motion.div>
+              ))}
+            </div>
 
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               type="button"
-              className="w-full rounded-xl border-2 border-dashed border-black/20 dark:border-white/20 py-4 text-sm font-medium text-black/60 dark:text-white/60 hover:border-iris/50 hover:text-iris-glow transition-all duration-300"
+              onClick={() => {
+                setForm(prev => ({
+                  ...prev,
+                  tickets: [
+                    ...prev.tickets,
+                    { id: Date.now().toString(), name: "", price: "", quantity: 150 }
+                  ]
+                }));
+              }}
+              className="w-full rounded-xl border-2 border-dashed border-black/20 dark:border-white/20 py-4 text-sm font-medium text-black/60 dark:text-white/60 hover:border-iris/50 hover:text-iris-glow transition-all duration-300 mt-4"
             >
               <span className="flex items-center justify-center gap-2">
                 <IconPlus />
@@ -1009,6 +1057,14 @@ function IconLoader() {
     <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24">
       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+    </svg>
+  );
+}
+
+function IconTrash() {
+  return (
+    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
     </svg>
   );
 }

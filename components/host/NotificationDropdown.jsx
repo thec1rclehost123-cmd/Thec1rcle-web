@@ -39,29 +39,50 @@ export default function NotificationDropdown() {
 
     // Fetch Notifications
     useEffect(() => {
-        if (!user) return;
-        const db = getFirebaseDb();
+        if (typeof window === 'undefined') return;
+        if (!user?.uid) return;
 
-        // Query: Get notifications for this user, ordered by newest first
-        const q = query(
-            collection(db, "notifications"),
-            where("recipientId", "==", user.uid),
-            orderBy("createdAt", "desc")
-        );
+        let unsubscribe;
 
-        const unsubscribe = onSnapshot(q, (snapshot) => {
-            const notifs = snapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data(),
-                // Handle timestamp safely
-                createdAt: doc.data().createdAt?.toDate() || new Date()
-            }));
-            setNotifications(notifs);
-            setUnreadCount(notifs.filter(n => !n.read).length);
-        });
+        try {
+            const db = getFirebaseDb();
 
-        return () => unsubscribe();
-    }, [user]);
+            // Query: Get notifications for this user, ordered by newest first
+            const q = query(
+                collection(db, "notifications"),
+                where("recipientId", "==", user.uid),
+                orderBy("createdAt", "desc")
+            );
+
+            unsubscribe = onSnapshot(q, (snapshot) => {
+                const notifs = snapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data(),
+                    // Handle timestamp safely
+                    createdAt: doc.data().createdAt?.toDate() || new Date()
+                }));
+                setNotifications(notifs);
+                setUnreadCount(notifs.filter(n => !n.read).length);
+            }, (error) => {
+                console.error("Notification listener error:", error);
+                if (error.code === 'failed-precondition') {
+                    console.warn("Firestore index might be missing. Check console for link.");
+                }
+            });
+        } catch (err) {
+            console.error("Failed to subscribe to notifications:", err);
+        }
+
+        return () => {
+            if (typeof unsubscribe === 'function') {
+                try {
+                    unsubscribe();
+                } catch (cleanupErr) {
+                    console.error("Error during notification cleanup:", cleanupErr);
+                }
+            }
+        };
+    }, [user?.uid]);
 
     // Actions
     const markAsRead = async (id) => {

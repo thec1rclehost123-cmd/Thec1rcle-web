@@ -20,13 +20,13 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, profile, logout, loading } = useAuth();
 
-  if (pathname?.startsWith("/host")) return null;
-
   const navWidth = useTransform(scrollY, [0, 100], ["100%", "90%"]);
   const navY = useTransform(scrollY, [0, 100], [0, 20]);
   const navBackdrop = useTransform(scrollY, [0, 100], ["blur(0px)", "blur(20px)"]);
   const navBackground = useTransform(scrollY, [0, 100], ["rgba(5, 5, 5, 0)", "var(--nav-bg-opaque)"]);
   const navBorder = useTransform(scrollY, [0, 100], ["rgba(255, 255, 255, 0)", "var(--nav-border)"]);
+
+  if (pathname?.startsWith("/host")) return null;
 
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
   const closeMenu = () => setIsMenuOpen(false);

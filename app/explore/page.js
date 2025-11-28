@@ -9,6 +9,7 @@ import ExploreFilterBar from "../../components/ExploreFilterBar";
 import CategoryTabs from "../../components/CategoryTabs";
 import ExploreEventGrid from "../../components/ExploreEventGrid";
 import Skeleton from "../../components/ui/Skeleton";
+import Footer from "../../components/Footer";
 
 const sortTabs = ["Trending", "This Week", "New", "Soonest", "Price Low to High"];
 const dateFilters = [
@@ -398,7 +399,7 @@ export default function ExplorePage() {
           />
         </div>
 
-        <section className="mx-auto w-full max-w-[1600px] px-4 pb-24 sm:px-6 lg:px-12">
+        <section className="mx-auto w-full max-w-[1600px] px-4 pb-10 sm:px-6 lg:px-12">
           <div className="space-y-12">
             <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
               <div className="space-y-3">
@@ -445,6 +446,7 @@ export default function ExplorePage() {
             </div>
           </div>
         </section>
+        <Footer />
       </div>
       {/* End content wrapper */}
     </div>
