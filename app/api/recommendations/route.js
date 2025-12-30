@@ -3,6 +3,8 @@ import { NextResponse } from "next/server";
 import { getRecommendedEvents, getSimilarEvents } from "../../../lib/server/recommendations";
 import { verifyAuth } from "../../../lib/server/auth";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(request) {
     try {
         const { searchParams } = new URL(request.url);

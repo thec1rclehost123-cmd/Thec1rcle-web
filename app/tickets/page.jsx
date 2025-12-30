@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useAuth } from "../../components/providers/AuthProvider";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getUserTickets } from "./actions";
@@ -324,7 +324,7 @@ const QRModal = ({ ticket, onClose }) => {
     );
 };
 
-export default function TicketsPage() {
+function TicketsContent() {
     const { user, loading: authLoading } = useAuth();
     const router = useRouter();
     const [tickets, setTickets] = useState({ upcomingTickets: [], pastTickets: [] });
@@ -477,5 +477,17 @@ export default function TicketsPage() {
                 }
             `}</style>
         </div>
+    );
+}
+
+export default function TicketsPage() {
+    return (
+        <Suspense fallback={
+            <div className="flex min-h-screen items-center justify-center bg-[var(--bg-color)]">
+                <div className="h-8 w-8 animate-spin rounded-full border-4 border-black/10 dark:border-white/20 border-t-orange dark:border-t-white" />
+            </div>
+        }>
+            <TicketsContent />
+        </Suspense>
     );
 }
